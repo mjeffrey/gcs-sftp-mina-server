@@ -34,7 +34,6 @@ public class EmbeddedSftpServer implements InitializingBean {
         this.sftpServerProperties = sftpServerProperties;
     }
 
-
     @Override
     public void afterPropertiesSet() throws Exception {
         rootPath = Paths.get(sftpServerProperties.getRootGsUri());
