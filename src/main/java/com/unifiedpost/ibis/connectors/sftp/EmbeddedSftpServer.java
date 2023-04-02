@@ -34,13 +34,6 @@ public class EmbeddedSftpServer implements InitializingBean {
         this.sftpServerProperties = sftpServerProperties;
     }
 
-    private static List<SftpSubsystemFactory> createSubsystemFactories() {
-        SftpSubsystemFactory subsystemFactory = new SftpSubsystemFactory.Builder()
-                .withFileSystemAccessor(new GcsSftpFileSystemAccessor()) // probably not needed see "sftp-auto-fsync-on-close"
-                .build();
-        subsystemFactory.addSftpEventListener(new LoggingSftpEventListener());
-        return Collections.singletonList(subsystemFactory);
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -78,6 +71,13 @@ public class EmbeddedSftpServer implements InitializingBean {
         Path authorizedKeys = writeResource("authorized_keys.local", sftpServerProperties.getAuthorizedKeys());
         Set<String> users = userHomes.stream().map(UserHome::getUsername).collect(Collectors.toSet());
         return new UserAuthentication(authorizedKeys, users);
+    }
+
+    private List<SftpSubsystemFactory> createSubsystemFactories() {
+        SftpSubsystemFactory subsystemFactory = new SftpSubsystemFactory.Builder().withFileSystemAccessor(new GcsSftpFileSystemAccessor()) // probably not needed see "sftp-auto-fsync-on-close"
+                .build();
+        subsystemFactory.addSftpEventListener(new LoggingSftpEventListener());
+        return Collections.singletonList(subsystemFactory);
     }
 
     @SneakyThrows
