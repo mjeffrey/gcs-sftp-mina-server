@@ -1,0 +1,46 @@
+#Server configuration
+server:
+  port: ${PORT:11100}
+  error:
+    include-stacktrace: never
+
+#Application configuration
+#Spring configuration
+spring:
+  cloud:
+    gcp:
+      core:
+        enabled: false
+      storage:
+        enabled: false
+  jpa:
+    open-in-view: false
+
+application:
+  sftp:
+    root-gs-uri: "gs://test-bucket-sbx/sftp"
+    port: 22222
+    host-key: "classpath:config/hostkey.ser"
+    authorized-keys: "classpath:config/authorized_keys.local"
+    directories: [ "download", "upload" ]
+    users: [ be, de, ee, es, fr, it, lt, lu, lv, nl, pt, sk ]
+
+logging:
+  level:
+    root: INFO
+
+
+# Actuator
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: health, info, metrics, logging
+      path-mapping:
+        health: /healthcheck
+  info:
+    env:
+      enabled: true
+
+
